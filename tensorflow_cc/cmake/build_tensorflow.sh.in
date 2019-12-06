@@ -8,7 +8,10 @@ function version_gt {
 
 # configure environmental variables
 export CC_OPT_FLAGS=${CC_OPT_FLAGS:-"-march=ivybridge"}
-export BAZEL_OPT_FLAGS=${BAZEL_OPT_FLAGS:-"--jobs=1 --local_ram_resources=2048 --cxxopt=\"--std=c++11 -march=native\""}
+export BAZEL_N_JOBS=${BAZEL_N_JOBS:-"1"}
+export BAZEL_LOCAL_RAM_RESOURCES=${BAZEL_LOCAL_RAM_RESOURCES:-"2048"}
+export BAZEL_CXX_ARCH=${BAZEL_CXX_ARCH:-"-march=ivybridge"}
+export BAZEL_CXXOPT=${BAZEL_CXXOPT:-"--std=c++11"}
 export TF_NEED_GCP=${TF_NEED_GCP:-0}
 export TF_NEED_HDFS=${TF_NEED_HDFS:-0}
 export TF_NEED_OPENCL=${TF_NEED_OPENCL:-0}
@@ -78,7 +81,9 @@ fi
 ./configure
 bazel build --config=opt \
             --config=monolithic \
-            ${BAZEL_OPT_FLAGS} \
+            --jobs=${BAZEL_N_JOBS} \
+            --local_ram_resources=${BAZEL_LOCAL_RAM_RESOURCES} \
+            --cxxopts=\"${BAZEL_CXXOPT} ${BAZEL_CXX_ARCH}\" \
             $cuda_config_opts \
             tensorflow:libtensorflow_cc.so
 bazel shutdown
