@@ -12,6 +12,11 @@ option(ALLOW_CUDA "When building the shared library, try to find and use CUDA." 
 option(TENSORFLOW_STATIC "Build static library." ON)
 set(TENSORFLOW_TAG "v1.15.0" CACHE STRING "The tensorflow release tag to be checked out (default v1.15.0).")
 option(SYSTEM_PROTOBUF "Use system protobuf instead of static protobuf from contrib/makefile." OFF)
+set(BAZEL_N_JOBS "1" CACHE STRING "Number of bazel jobs (default 1).")
+set(BAZEL_LOCAL_RAM_RESOURCES "1024" CACHE STRING "Passed to bazel as --local-ram-resources (default 1024).")
+
+message(STATUS "Bazel using --jobs=${BAZEL_N_JOBS}")
+message(STATUS "Bazel using --local_ram_resources=${BAZEL_LOCAL_RAM_RESOURCES}")
 
 # -------------
 # CMake Options

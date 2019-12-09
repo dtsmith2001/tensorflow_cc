@@ -8,10 +8,6 @@ function version_gt {
 
 # configure environmental variables
 export CC_OPT_FLAGS=${CC_OPT_FLAGS:-"-march=ivybridge"}
-export BAZEL_N_JOBS=${BAZEL_N_JOBS:-"1"}
-export BAZEL_LOCAL_RAM_RESOURCES=${BAZEL_LOCAL_RAM_RESOURCES:-"2048"}
-export BAZEL_CXX_ARCH=${BAZEL_CXX_ARCH:-"-march=ivybridge"}
-export BAZEL_CXXOPT=${BAZEL_CXXOPT:-"--std=c++11"}
 export TF_NEED_GCP=${TF_NEED_GCP:-0}
 export TF_NEED_HDFS=${TF_NEED_HDFS:-0}
 export TF_NEED_OPENCL=${TF_NEED_OPENCL:-0}
@@ -35,6 +31,9 @@ export TF_NEED_ROCM=${TF_NEED_ROCM:-0}
 export NCCL_INSTALL_PATH=${NCCL_INSTALL_PATH:-/usr}
 export PYTHON_BIN_PATH=${PYTHON_BIN_PATH:-"$(which python3)"}
 export PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'import site; print(site.getsitepackages()[0])')"
+
+bazel_n_jobs="--jobs=@BAZEL_N_JOBS@"
+bazel_local_ram_resources="--local_ram_resources=@BAZEL_LOCAL_RAM_RESOURCES@"
 
 # check if cuda support requested and supported
 if [ "@ALLOW_CUDA@" = "ON" ] && hash nvcc 2>/dev/null; then
@@ -81,9 +80,8 @@ fi
 ./configure
 bazel build --config=opt \
             --config=monolithic \
-            --jobs=${BAZEL_N_JOBS} \
-            --local_ram_resources=${BAZEL_LOCAL_RAM_RESOURCES} \
-            --cxxopts=\"${BAZEL_CXXOPT} ${BAZEL_CXX_ARCH}\" \
+            ${bazel_n_jobs} \
+            ${bazel_local_ram_resources} \
             $cuda_config_opts \
             tensorflow:libtensorflow_cc.so
 bazel shutdown
