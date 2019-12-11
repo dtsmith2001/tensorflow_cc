@@ -34,6 +34,11 @@ export PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'import site; print(site.getsitepa
 
 bazel_n_jobs="--jobs=@BAZEL_N_JOBS@"
 bazel_local_ram_resources="--local_ram_resources=@BAZEL_LOCAL_RAM_RESOURCES@"
+            # --jobs=1 \
+            # --local_ram_resources=HOST_RAM*.25 \
+            # --local_cpu_resources=HOST_CPUS*.5 \
+            # --host-javacopt="-Xms256m -Xmx750m" \
+            # --host-jvmopt="-Xms256m -Xmx750m" \
 
 # check if cuda support requested and supported
 if [ "@ALLOW_CUDA@" = "ON" ] && hash nvcc 2>/dev/null; then
@@ -76,12 +81,12 @@ else
     export TF_NEED_CUDA=0
 fi
 
+#            --local_resources 1024,0.5,0.5 \
+
 # configure and build
 ./configure
 bazel build --config=opt \
             --config=monolithic \
-            ${bazel_n_jobs} \
-            ${bazel_local_ram_resources} \
             $cuda_config_opts \
             tensorflow:libtensorflow_cc.so
 bazel shutdown
