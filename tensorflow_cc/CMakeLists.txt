@@ -12,8 +12,24 @@ option(ALLOW_CUDA "When building the shared library, try to find and use CUDA." 
 option(TENSORFLOW_STATIC "Build static library." ON)
 set(TENSORFLOW_TAG "v1.15.0" CACHE STRING "The tensorflow release tag to be checked out (default v1.15.0).")
 option(SYSTEM_PROTOBUF "Use system protobuf instead of static protobuf from contrib/makefile." OFF)
+
+# --jobs=1 \
+# --local_ram_resources=HOST_RAM*.25 \
+# --local_cpu_resources=HOST_CPUS*.5 \
+# --host-javacopt="-Xms256m -Xmx750m" \
+# --host-jvmopt="-Xms256m -Xmx750m" \
 set(BAZEL_N_JOBS "1" CACHE STRING "Number of bazel jobs (default 1).")
+
 set(BAZEL_LOCAL_RAM_RESOURCES "1024" CACHE STRING "Passed to bazel as --local-ram-resources (default 1024).")
+
+#set(BAZEL_LOCAL_CPU_RESOURCES "HOST_CPUS*.5" CACHE_STRING "Local RAM resources - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--local_ram_resources (default is HOST_CPU*.25)")
+set(BAZEL_LOCAL_CPU_RESOURCES "HOST_CPUS*.5" CACHE_STRING "Local RAM resources (default is HOST_CPU*.25)")
+
+#set(BAZEL_LOCAL_RAM_RESOURCES "HOST_RAM*.5" CACHE STRING "Local CPU resources - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--local_cpu_resources (default is HOST_RAM*.5)")
+
+set(BAZEL_HOST_JAVACOPTS "-Xms256m -Xmx750m" CACHE STRING "Options to host javac - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--host_javacopt (default is -Xms256m -Xmx750m)")
+
+set(BAZEL_HOST_JVMOPTS "-Xms256m -Xmx750m" CACHE STRING "Options to host jvm - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--jvmopt (default is -Xms256m -Xmx750m)")
 
 message(STATUS "Bazel using --jobs=${BAZEL_N_JOBS}")
 message(STATUS "Bazel using --local_ram_resources=${BAZEL_LOCAL_RAM_RESOURCES}")

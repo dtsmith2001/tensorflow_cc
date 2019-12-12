@@ -32,13 +32,12 @@ export NCCL_INSTALL_PATH=${NCCL_INSTALL_PATH:-/usr}
 export PYTHON_BIN_PATH=${PYTHON_BIN_PATH:-"$(which python3)"}
 export PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'import site; print(site.getsitepackages()[0])')"
 
-bazel_n_jobs="--jobs=@BAZEL_N_JOBS@"
-bazel_local_ram_resources="--local_ram_resources=@BAZEL_LOCAL_RAM_RESOURCES@"
-            # --jobs=1 \
-            # --local_ram_resources=HOST_RAM*.25 \
-            # --local_cpu_resources=HOST_CPUS*.5 \
-            # --host-javacopt="-Xms256m -Xmx750m" \
-            # --host-jvmopt="-Xms256m -Xmx750m" \
+export bazel_n_jobs="--jobs=@BAZEL_N_JOBS@"
+export bazel_local_resources="--local-resources=@BAZEL_LOCAL_RESOURCES@"
+export bazel_local_ram_resources="--local_ram_resources=@BAZEL_LOCAL_RAM_RESOURCES@"
+export bazel_local_cpu_resources="--local_cpu_resources=@BAZEL_LOCAL_CPU_RESOURCES@"
+export bazel_host_javacopt="--host-javacopt=@BAZEL_HOST_JAVACOPT@"
+export bazel_host_jvmopt="--host-jvmopt=@BAZEL_HOST_JVMOPT"
 
 # check if cuda support requested and supported
 if [ "@ALLOW_CUDA@" = "ON" ] && hash nvcc 2>/dev/null; then
@@ -87,6 +86,7 @@ fi
 ./configure
 bazel build --config=opt \
             --config=monolithic \
+            ${bazel_n_jobs} \
             $cuda_config_opts \
             tensorflow:libtensorflow_cc.so
 bazel shutdown
