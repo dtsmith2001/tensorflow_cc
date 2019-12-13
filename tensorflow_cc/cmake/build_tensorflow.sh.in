@@ -3,7 +3,7 @@ set -e
 
 # Test whether one version ($1) is less than or equal to other ($2).
 function version_gt {
-    test "`printf '%s\n' "$@" | sort -V | head -n 1`" != "$1"
+    test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"
 }
 
 #function check_bazel_version {
@@ -122,9 +122,9 @@ bazel build --config=opt \
             ${bazel_local_cpu_resources} \
             ${bazel_javacopt} \
             ${bazel_jvmopt} \
-            ${pi_opts} \
-            ${tensorflow_pi_opts} \
-            $cuda_config_opts \
+            "${tensorflow_pi_zero_opts}" \
+            "${tensorflow_pi_opts}" \
+            ${cuda_config_opts} \
             tensorflow:libtensorflow_cc.so
 if [ $? -ne 0 ]
 then
@@ -142,7 +142,7 @@ Build artifacts:
 		tensorflow/bazel-tensorflow/external/eigen_archive
 		tensorflow/bazel-tensorflow/external/protobuf_archive/src
 		tensorflow/bazel-genfiles
-	
+
 	Note that due to changes in the Tensorflow project, there may be
 	additional header directories required. All of these should be under
 		tensorflow/bazel-tensorflow
