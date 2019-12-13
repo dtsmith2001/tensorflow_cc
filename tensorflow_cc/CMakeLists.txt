@@ -4,6 +4,8 @@ project(
   VERSION 1.15.0
 )
 
+include("${CMAKE_CURRENT_LIST_DIR}/cmake/colors.cmake")
+
 # Static library with no GPU support is built by default.
 # Use the following option to build a shared library with GPU support.
 # If enabled, bazel has to be installed.
@@ -17,21 +19,25 @@ option(SYSTEM_PROTOBUF "Use system protobuf instead of static protobuf from cont
 # --local_ram_resources=HOST_RAM*.25 \
 # --local_cpu_resources=HOST_CPUS*.5 \
 # --host-javacopt="-Xms256m -Xmx750m" \
-# --host-jvmopt="-Xms256m -Xmx750m" \
+# --host-jvmopt="-Xms256m -Xmx750m"
+
 set(BAZEL_N_JOBS "1" CACHE STRING "Number of bazel jobs (default 1).")
 
 set(BAZEL_LOCAL_RAM_RESOURCES "1024" CACHE STRING "Passed to bazel as --local-ram-resources (default 1024).")
 
-set(BAZEL_LOCAL_CPU_RESOURCES "HOST_CPUS*.5" CACHE STRING "Local RAM resources - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--local_ram_resources (default is HOST_CPU*.25)")
+set(BAZEL_LOCAL_CPU_RESOURCES "HOST_CPUS*.25" CACHE STRING "Local RAM resources - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--local_ram_resources (default is HOST_CPU*.25)")
 
-set(BAZEL_LOCAL_RAM_RESOURCES "HOST_RAM*.5" CACHE STRING "Local CPU resources - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--local_cpu_resources (default is HOST_RAM*.5)")
+set(BAZEL_LOCAL_RAM_RESOURCES "HOST_RAM*.25" CACHE STRING "Local RAM resources - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--local_cpu_resources (default is HOST_RAM*.5)")
 
-set(BAZEL_JAVACOPTS "-Xms256m -Xmx750m" CACHE STRING "Options to javac - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--host_javacopt (default is -Xms256m -Xmx750m)")
+set(BAZEL_JAVACOPT "-Xms256m -Xmx750m" CACHE STRING "Options to javac - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--host_javacopt (default is -Xms256m -Xmx750m)")
 
-set(BAZEL_JVMOPTS "-Xms256m -Xmx750m" CACHE STRING "Options to jvm - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--jvmopt (default is -Xms256m -Xmx750m)")
+set(BAZEL_JVMOPT "-Xms256m -Xmx750m" CACHE STRING "Options to jvm - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--jvmopt (default is -Xms256m -Xmx750m)")
 
-message(STATUS "Bazel using --jobs=${BAZEL_N_JOBS}")
-message(STATUS "Bazel using --local_ram_resources=${BAZEL_LOCAL_RAM_RESOURCES}")
+colormessage(BAZEL_STATUS "Bazel using --jobs=${BAZEL_N_JOBS}")
+colormessage(BAZEL_STATUS "Bazel using --local_ram_resources=${BAZEL_LOCAL_RAM_RESOURCES}")
+colormessage(BAZEL_STATUS "Bazel using --local_cpu_resources=${BAZEL_LOCAL_CPU_RESOURCES}")
+colormessage(BAZEL_STATUS "Bazel using --javacopt=${BAZEL_JAVACOPT}")
+colormessage(BAZEL_STATUS "Bazel using --jvmopt=${BAZEL_JVMOPT}")
 
 # -------------
 # CMake Options
