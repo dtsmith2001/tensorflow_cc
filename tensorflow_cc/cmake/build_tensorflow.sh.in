@@ -6,6 +6,10 @@ function version_gt {
     test "`printf '%s\n' "$@" | sort -V | head -n 1`" != "$1"
 }
 
+#function check_bazel_version {
+#	 [ "$(bazel version 2>/dev/null | grep 'Build label' | cut -f3 -d' ')" == 0.26.1 ] && echo bazel ok
+#}
+
 # configure environmental variables
 export CC_OPT_FLAGS=${CC_OPT_FLAGS:-"-march=ivybridge"}
 export TF_NEED_GCP=${TF_NEED_GCP:-0}
@@ -36,8 +40,22 @@ export bazel_n_jobs="--jobs=@BAZEL_N_JOBS@"
 export bazel_local_resources="--local-resources=@BAZEL_LOCAL_RESOURCES@"
 export bazel_local_ram_resources="--local_ram_resources=@BAZEL_LOCAL_RAM_RESOURCES@"
 export bazel_local_cpu_resources="--local_cpu_resources=@BAZEL_LOCAL_CPU_RESOURCES@"
-export bazel_host_javacopt="--host-javacopt=@BAZEL_HOST_JAVACOPT@"
-export bazel_host_jvmopt="--host-jvmopt=@BAZEL_HOST_JVMOPT"
+export bazel_javacopt="--javacopt=@BAZEL_JAVACOPT@"
+export bazel_jvmopt="--jvmopt=@BAZEL_JVMOPT"
+export tensorflow_pi_opts="--copt=-march=armv7-a --copt=-mfpu=neon-vfpv4
+  --copt=-std=gnu++11 --copt=-DS_IREAD=S_IRUSR --copt=-DS_IWRITE=S_IWUSR
+  --copt=-O3 --copt=-fno-tree-pre --copt=-fpermissive
+  --copt=-U__GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+  --copt=-U__GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
+  --copt=-U__GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
+  --define=raspberry_pi_with_neon=true"
+export tensorflow_pi_zero_opts="--copt=-march=armv6 --copt=-mfpu=vfp
+  --copt=-DUSE_GEMM_FOR_CONV --copt=-DUSE_OPENBLAS
+  --copt=-isystem --copt=${OPENBLAS_INSTALL_PATH}/include/
+  --copt=-std=gnu++11 --copt=-DS_IREAD=S_IRUSR --copt=-DS_IWRITE=S_IWUSR
+  --copt=-fpermissive
+  --linkopt=-L${OPENBLAS_INSTALL_PATH}/lib/
+  --linkopt=-l:libopenblas.a"
 
 # check if cuda support requested and supported
 if [ "@ALLOW_CUDA@" = "ON" ] && hash nvcc 2>/dev/null; then
@@ -87,6 +105,12 @@ fi
 bazel build --config=opt \
             --config=monolithic \
             ${bazel_n_jobs} \
+            ${bazel_local_ram_resources} \
+            ${bazel_local_cpu_resources} \
+            ${bazel_javacopt} \
+            ${bazel_jvmopt} \
+            ${pi_opts} \
+            ${tensorflow_pi_opts} \
             $cuda_config_opts \
             tensorflow:libtensorflow_cc.so
 bazel shutdown
