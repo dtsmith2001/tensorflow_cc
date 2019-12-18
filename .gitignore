@@ -34,3 +34,4 @@
 # Build folders
 example/build
 tensorflow_cc/build
+*.log

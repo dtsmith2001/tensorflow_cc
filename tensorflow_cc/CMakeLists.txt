@@ -25,16 +25,13 @@ set(BAZEL_N_JOBS "1" CACHE STRING "Number of bazel jobs (default 1).")
 
 set(BAZEL_LOCAL_RAM_RESOURCES "1024" CACHE STRING "Passed to bazel as --local-ram-resources (default 1024).")
 
-set(BAZEL_LOCAL_CPU_RESOURCES "HOST_CPUS*.25" CACHE STRING "Local RAM resources - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--local_ram_resources (default is HOST_CPU*.25)")
+set(BAZEL_LOCAL_CPU_RESOURCES "HOST_CPUS*.75" CACHE STRING "Local RAM resources - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--local_ram_resources (default is HOST_CPU*.75)")
 
-set(BAZEL_LOCAL_RAM_RESOURCES "HOST_RAM*.25" CACHE STRING "Local RAM resources - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--local_cpu_resources (default is HOST_RAM*.5)")
+set(BAZEL_JAVACOPT "-Xms256m -Xmx1g" CACHE STRING "Options to javac - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--host_javacopt (default is -Xms256m -Xmx750m)")
 
-set(BAZEL_JAVACOPT "-Xms256m -Xmx750m" CACHE STRING "Options to javac - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--host_javacopt (default is -Xms256m -Xmx750m)")
-
-set(BAZEL_JVMOPT "-Xms256m -Xmx750m" CACHE STRING "Options to jvm - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--jvmopt (default is -Xms256m -Xmx750m)")
+set(BAZEL_JVMOPT "-Xms256m -Xmx1g" CACHE STRING "Options to jvm - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--jvmopt (default is -Xms256m -Xmx750m)")
 
 colormessage(BAZEL_STATUS "Bazel using --jobs=${BAZEL_N_JOBS}")
-colormessage(BAZEL_STATUS "Bazel using --local_ram_resources=${BAZEL_LOCAL_RAM_RESOURCES}")
 colormessage(BAZEL_STATUS "Bazel using --local_cpu_resources=${BAZEL_LOCAL_CPU_RESOURCES}")
 colormessage(BAZEL_STATUS "Bazel using --javacopt=${BAZEL_JAVACOPT}")
 colormessage(BAZEL_STATUS "Bazel using --jvmopt=${BAZEL_JVMOPT}")

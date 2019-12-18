@@ -11,7 +11,7 @@ function version_gt {
 #}
 
 # configure environmental variables
-export CC_OPT_FLAGS=${CC_OPT_FLAGS:-"-march=ivybridge"}
+export CC_OPT_FLAGS=${CC_OPT_FLAGS:-"-march=native"}
 export TF_NEED_GCP=${TF_NEED_GCP:-0}
 export TF_NEED_HDFS=${TF_NEED_HDFS:-0}
 export TF_NEED_OPENCL=${TF_NEED_OPENCL:-0}
@@ -36,45 +36,14 @@ export NCCL_INSTALL_PATH=${NCCL_INSTALL_PATH:-/usr}
 export PYTHON_BIN_PATH=${PYTHON_BIN_PATH:-"$(which python3)"}
 export PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'import site; print(site.getsitepackages()[0])')"
 
-if [ "${PI}" = "zero" ] || [ "${PI}" = "ZERO" ]
-then
-    ## should this project build OpenBLAS and install in /usr/local?
-    OPENBLAS_SRC_PATH=/tmp/openblas_src/
-    sudo rm -rf ${OPENBLAS_SRC_PATH}
-    git clone https://github.com/xianyi/OpenBLAS ${OPENBLAS_SRC_PATH}
-    cd ${OPENBLAS_SRC_PATH}
-    # The commit after this introduced Fortran compile issues. In theory they should
-    # be solvable using NOFORTRAN=1 on the make command, but my initial tries didn't
-    # work, so pinning to the last know good version.
-    git checkout 5a6a2bed9aff0ba8a18651d5514d029c8cae336a
-    # If this path is changed, you'll also need to update
-    # cxx_builtin_include_directory in third_party/toolchains/cpus/arm/CROSSTOOL.tpl
-    OPENBLAS_INSTALL_PATH=/tmp/openblas_install/
-    make CC=${CROSSTOOL_CC} FC=${CROSSTOOL_CC} HOSTCC=gcc TARGET=ARMV6
-    make PREFIX=${OPENBLAS_INSTALL_PATH} install
-fi
-
 # a good default for number of jobs is $(bc -q <<< "0.75 * $(nproc)")
 export bazel_n_jobs="--jobs=@BAZEL_N_JOBS@"
 export bazel_local_cpu_resources="--local_cpu_resources=@BAZEL_LOCAL_CPU_RESOURCES@"
 export bazel_javacopt="--javacopt=@BAZEL_JAVACOPT@"
 export bazel_jvmopt="--jvmopt=@BAZEL_JVMOPT@"
 
-# these switches need to be checked on the PI 2 & 3, as well as the Zero
-export tensorflow_pi_opts="--copt=-march=armv7-a --copt=-mfpu=neon-vfpv4
-  --copt=-std=gnu++11 --copt=-DS_IREAD=S_IRUSR --copt=-DS_IWRITE=S_IWUSR
-  --copt=-O3 --copt=-fno-tree-pre --copt=-fpermissive
-  --copt=-U__GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
-  --copt=-U__GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
-  --copt=-U__GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
-  --define=raspberry_pi_with_neon=true"
-export tensorflow_pi_zero_opts="--copt=-march=armv6 --copt=-mfpu=vfp
-  --copt=-DUSE_GEMM_FOR_CONV --copt=-DUSE_OPENBLAS
-  --copt=-isystem --copt=${OPENBLAS_INSTALL_PATH}/include/
-  --copt=-std=gnu++11 --copt=-DS_IREAD=S_IRUSR --copt=-DS_IWRITE=S_IWUSR
-  --copt=-fpermissive
-  --linkopt=-L${OPENBLAS_INSTALL_PATH}/lib/
-  --linkopt=-l:libopenblas.a"
+# remove warnings that clutter up the log
+export c_cxx_no_warn="--cxxopt=-Wno-unused-result --cxxopt=-Wno-ignored-attributes --cxxopt=-Wno-maybe-uninitialized --cxxopt=-Wno-sign-compare --cxxopt=-Wno-return-type --cxxopt=-Wno-deprecated-declarations --cxxopt=-fPIC --cxxopt=-std=gnu++11 --cxxopt=-Wno-ignored-attributes --copt=-Wno-comment --copt=-Wno-unused-function --copt=-Wno-maybe-uninitialized --copt=-Wno-unused-result --copt=-Wno-deprecated-declarations --copt=-march=native --copt=-Wno-sign-compare --copt=-Wno-unknown-pragmas --copt=-Wno-unused-but-set-parameter --copt=-Wno-return-type --copt=-O3 --copt=-fPIC"
 
 # check if cuda support requested and supported
 if [ "@ALLOW_CUDA@" = "ON" ] && hash nvcc 2>/dev/null; then
@@ -122,12 +91,9 @@ fi
 bazel build --config=opt \
             --config=monolithic \
             ${bazel_n_jobs} \
-            ${bazel_local_ram_resources} \
             ${bazel_local_cpu_resources} \
             ${bazel_javacopt} \
             ${bazel_jvmopt} \
-            "${tensorflow_pi_zero_opts}" \
-            "${tensorflow_pi_opts}" \
             ${cuda_config_opts} \
             tensorflow:libtensorflow_cc.so
 if [ $? -ne 0 ]
@@ -154,3 +120,4 @@ Build artifacts:
 build_artifacts_location
 fi
 bazel shutdown
+ employees/dtsmith/notes.txt
