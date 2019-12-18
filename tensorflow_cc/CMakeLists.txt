@@ -17,16 +17,22 @@ option(SYSTEM_PROTOBUF "Use system protobuf instead of static protobuf from cont
 
 set(BAZEL_N_JOBS "1" CACHE STRING "Number of bazel jobs (default 1).")
 
-set(BAZEL_LOCAL_CPU_RESOURCES "--local_cpu_resources=HOST_CPUS*.75" CACHE STRING "Local RAM resources - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--local_ram_resources (default is HOST_CPU*.75)")
+set(BAZEL_LOCAL_CPU_RESOURCES "HOST_CPUS*.75" CACHE STRING "Local RAM resources - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--local_ram_resources (default is HOST_CPU*.75)")
 
-set(BAZEL_JAVACOPT "--javacopt=-Xms256m --javacopt=-Xmx1g" CACHE STRING "Options to javac - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--host_javacopt (default is --javacopt=-Xms256m --javacopt=-Xmx750m)")
+set(BAZEL_JAVACOPT_CACHE_MIN "-Xms256m CACHE STRING "Options to javac - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--host_javacopt (default is -Xms256m)")
+set(BAZEL_JAVACOPT_CACHE_MAX "-Xmx1g" CACHE STRING "Options to javac - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--host_javacopt (default is -Xmx1g)")
 
-set(BAZEL_JVMOPT "--jvmopt=-Xms256m --jvmopt=-Xmx1g" CACHE STRING "Options to jvm - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--jvmopt (default is --jvmopt=-Xms256m --jvmopt=-Xmx750m)")
+set(BAZEL_JVMOPT_CACHE_MIN "-Xms256m" CACHE STRING "Options to jvm - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--jvmopt (default is -Xms256m)")
+set(BAZEL_JVMOPT_CACHE_MAX "-Xmx1g" CACHE STRING "Options to jvm - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--jvmopt (default is -Xmx1g)")
 
+colormessage(BAZEL_STATUS "Resource control:")
 #colormessage(BAZEL_STATUS "Bazel using "${BAZEL_N_JOBS}")
 #colormessage(BAZEL_STATUS "Bazel using "${BAZEL_LOCAL_CPU_RESOURCES}")
-#colormessage(BAZEL_STATUS "Bazel using "${BAZEL_JAVACOPT}")
-#colormessage(BAZEL_STATUS "Bazel using "${BAZEL_JVMOPT}")
+colormessage(BAZEL_STATUS "Java VM and Javac Heap Memory Control:")
+#colormessage(BAZEL_STATUS "Bazel using "${BAZEL_JAVACOPT_CACHE_MIN}")
+#colormessage(BAZEL_STATUS "Bazel using "${BAZEL_JAVACOPT_CACHE_MAX}")
+#colormessage(BAZEL_STATUS "Bazel using "${BAZEL_JVMOPT_CACHE_MIN}")
+#colormessage(BAZEL_STATUS "Bazel using "${BAZEL_JVMOPT_CACHE_MAX}")
 
 # -------------
 # CMake Options
