@@ -36,7 +36,7 @@ export NCCL_INSTALL_PATH=${NCCL_INSTALL_PATH:-/usr}
 export PYTHON_BIN_PATH=${PYTHON_BIN_PATH:-"$(which python3)"}
 export PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'import site; print(site.getsitepackages()[0])')"
 
-# a good default for number of jobs is $(bc -q <<< "0.75 * $(nproc)")
+export n_jobs=$(echo "x = 0.75 * $(nproc); scale = 0; x / 1" | bc -l)
 export bazel_n_jobs="--jobs=@BAZEL_N_JOBS@"
 export bazel_local_cpu_resources="--local_cpu_resources=@BAZEL_LOCAL_CPU_RESOURCES@"
 export bazel_javacopt="--javacopt=@BAZEL_JAVACOPT@"
