@@ -23,10 +23,10 @@ set(BAZEL_JAVACOPT "--javacopt=-Xms256m --javacopt=-Xmx1g" CACHE STRING "Options
 
 set(BAZEL_JVMOPT "--jvmopt=-Xms256m --jvmopt=-Xmx1g" CACHE STRING "Options to jvm - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--jvmopt (default is --jvmopt=-Xms256m --jvmopt=-Xmx750m)")
 
-colormessage(BAZEL_STATUS "Bazel using "${BAZEL_N_JOBS}")
-colormessage(BAZEL_STATUS "Bazel using "${BAZEL_LOCAL_CPU_RESOURCES}")
-colormessage(BAZEL_STATUS "Bazel using "${BAZEL_JAVACOPT}")
-colormessage(BAZEL_STATUS "Bazel using "${BAZEL_JVMOPT}")
+#colormessage(BAZEL_STATUS "Bazel using "${BAZEL_N_JOBS}")
+#colormessage(BAZEL_STATUS "Bazel using "${BAZEL_LOCAL_CPU_RESOURCES}")
+#colormessage(BAZEL_STATUS "Bazel using "${BAZEL_JAVACOPT}")
+#colormessage(BAZEL_STATUS "Bazel using "${BAZEL_JVMOPT}")
 
 # -------------
 # CMake Options
