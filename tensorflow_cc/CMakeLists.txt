@@ -19,7 +19,7 @@ set(BAZEL_N_JOBS "1" CACHE STRING "Number of bazel jobs (default 1).")
 
 set(BAZEL_LOCAL_CPU_RESOURCES "HOST_CPUS*.75" CACHE STRING "Local RAM resources - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--local_ram_resources (default is HOST_CPU*.75)")
 
-set(BAZEL_JAVACOPT_CACHE_MIN "-Xms256m CACHE STRING "Options to javac - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--host_javacopt (default is -Xms256m)")
+set(BAZEL_JAVACOPT_CACHE_MIN "-Xms256m" CACHE STRING "Options to javac - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--host_javacopt (default is -Xms256m)")
 set(BAZEL_JAVACOPT_CACHE_MAX "-Xmx1g" CACHE STRING "Options to javac - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--host_javacopt (default is -Xmx1g)")
 
 set(BAZEL_JVMOPT_CACHE_MIN "-Xms256m" CACHE STRING "Options to jvm - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--jvmopt (default is -Xms256m)")
