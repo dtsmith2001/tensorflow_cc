@@ -15,9 +15,9 @@ option(TENSORFLOW_STATIC "Build static library." ON)
 set(TENSORFLOW_TAG "v1.15.0" CACHE STRING "The tensorflow release tag to be checked out (default v1.15.0).")
 option(SYSTEM_PROTOBUF "Use system protobuf instead of static protobuf from contrib/makefile." OFF)
 
-set(BAZEL_N_JOBS "1" CACHE STRING "Number of bazel jobs (default 1).")
+set(BAZEL_N_JOBS "--jobs=1" CACHE STRING "Number of bazel jobs (default 1).")
 
-set(BAZEL_LOCAL_CPU_RESOURCES "HOST_CPUS*.75" CACHE STRING "Local RAM resources - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--local_ram_resources (default is HOST_CPU*.75)")
+set(BAZEL_LOCAL_CPU_RESOURCES "--local_cpu_resources=HOST_CPUS*.75" CACHE STRING "Local RAM resources - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--local_ram_resources (default is HOST_CPU*.75)")
 
 set(BAZEL_JAVACOPT_CACHE_MIN "--javacopt=-Xms256m" CACHE STRING "Options to javac - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--host_javacopt (default is -Xms256m)")
 set(BAZEL_JAVACOPT_CACHE_MAX "--javacopt=-Xmx1g" CACHE STRING "Options to javac - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--host_javacopt (default is -Xmx1g)")
