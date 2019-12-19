@@ -27,11 +27,11 @@ set(BAZEL_JVMOPT_CACHE_MAX "--jvmopt=-Xmx1g" CACHE STRING "Options to jvm - see 
 
 colormessage(BAZEL_STATUS "Bazel Resource control:")
 colormessage(BAZEL_STATUS "  Maximum cpu utilization allowed \"${BAZEL_LOCAL_CPU_RESOURCES}\"")
-colormessage(BAZEL_STATUS "Bazel Java VM and Javac Heap Memory Control:")
-colormessage(BAZEL_STATUS "  javac heap cache minimum \"${BAZEL_JAVACOPT_CACHE_MIN}\"")
-colormessage(BAZEL_STATUS "  javac heap cache maximum \"${BAZEL_JAVACOPT_CACHE_MAX}\"")
-colormessage(BAZEL_STATUS "  Bazel using \"${BAZEL_JVMOPT_CACHE_MIN}\"")
-colormessage(BAZEL_STATUS "  Bazel using \"${BAZEL_JVMOPT_CACHE_MAX}\"")
+colormessage(BAZEL_STATUS "  Bazel Java heap cache minimum \"${BAZEL_JAVACOPT_CACHE_MIN}\"")
+colormessage(BAZEL_STATUS "  Bazel Java heap cache maximum \"${BAZEL_JAVACOPT_CACHE_MAX}\"")
+colormessage(BAZEL_STATUS "  Bazel JVM heap cache minimum \"${BAZEL_JVMOPT_CACHE_MIN}\"")
+colormessage(BAZEL_STATUS "  Bazel JVM heap cache maximum \"${BAZEL_JVMOPT_CACHE_MAX}\"")
+colormessage(BAZEL_STATUS "Ignore common compiler warnings ${BAZEL_IGNORE_WARNINGS})
 
 # -------------
 # CMake Options
