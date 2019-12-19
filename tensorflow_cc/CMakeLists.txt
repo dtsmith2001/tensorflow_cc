@@ -15,7 +15,7 @@ option(TENSORFLOW_STATIC "Build static library." ON)
 set(TENSORFLOW_TAG "v1.15.0" CACHE STRING "The tensorflow release tag to be checked out (default v1.15.0).")
 option(SYSTEM_PROTOBUF "Use system protobuf instead of static protobuf from contrib/makefile." OFF)
 
-set(USE_BAZEL_VERSION "0.26.1" CACHE_STRING "Maximum Bazel version")
+option(BAZEL_IGNORE_WARNINGS "Ignore warnings during Tensorflow build" OFF)
 
 set(BAZEL_LOCAL_CPU_RESOURCES "--local_cpu_resources=HOST_CPUS*.75" CACHE STRING "Local RAM resources - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--local_ram_resources (default is HOST_CPU*.75)")
 
@@ -26,13 +26,12 @@ set(BAZEL_JVMOPT_CACHE_MIN "--jvmopt=-Xms256m" CACHE STRING "Options to jvm - se
 set(BAZEL_JVMOPT_CACHE_MAX "--jvmopt=-Xmx1g" CACHE STRING "Options to jvm - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--jvmopt (default is -Xmx1g)")
 
 colormessage(BAZEL_STATUS "Bazel Resource control:")
-colormessage(BAZEL_STATUS "  cpu utilization allowed \"${BAZEL_LOCAL_CPU_RESOURCES}\"")
+colormessage(BAZEL_STATUS "  Maximum cpu utilization allowed \"${BAZEL_LOCAL_CPU_RESOURCES}\"")
 colormessage(BAZEL_STATUS "Bazel Java VM and Javac Heap Memory Control:")
 colormessage(BAZEL_STATUS "  javac heap cache minimum \"${BAZEL_JAVACOPT_CACHE_MIN}\"")
 colormessage(BAZEL_STATUS "  javac heap cache maximum \"${BAZEL_JAVACOPT_CACHE_MAX}\"")
 colormessage(BAZEL_STATUS "  Bazel using \"${BAZEL_JVMOPT_CACHE_MIN}\"")
 colormessage(BAZEL_STATUS "  Bazel using \"${BAZEL_JVMOPT_CACHE_MAX}\"")
-colormessage(BAZEL_STRING "Bazel version is ${USE_BAZEL_VERSION}")
 
 # -------------
 # CMake Options
