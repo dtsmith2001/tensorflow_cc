@@ -32,7 +32,7 @@ colormessage(BAZEL_STATUS "  javac heap cache minimum \"${BAZEL_JAVACOPT_CACHE_M
 colormessage(BAZEL_STATUS "  javac heap cache maximum \"${BAZEL_JAVACOPT_CACHE_MAX}\"")
 colormessage(BAZEL_STATUS "  Bazel using \"${BAZEL_JVMOPT_CACHE_MIN}\"")
 colormessage(BAZEL_STATUS "  Bazel using \"${BAZEL_JVMOPT_CACHE_MAX}\"")
-colormessage(BAZEL_STRING "Bazel version is ${USE_BAZEL_VERSION})
+colormessage(BAZEL_STRING "Bazel version is ${USE_BAZEL_VERSION}")
 
 # -------------
 # CMake Options
