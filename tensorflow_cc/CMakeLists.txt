@@ -24,7 +24,7 @@ set(BAZEL_JVMOPT_CACHE_MIN "--jvmopt=-Xms256m" CACHE STRING "Options to jvm - se
 set(BAZEL_JVMOPT_CACHE_MAX "--jvmopt=-Xmx1g" CACHE STRING "Options to jvm - see https://docs.bazel.build/versions/master/command-line-reference.html#flag--jvmopt (default is -Xmx1g)")
 
 colormessage(BAZEL_STATUS "Bazel Resource control:")
-colormessage(BAZEL_STATUS "  cpu utilization allowed \""${BAZEL_LOCAL_CPU_RESOURCES}\"")
+colormessage(BAZEL_STATUS "  cpu utilization allowed \"${BAZEL_LOCAL_CPU_RESOURCES}\"")
 colormessage(BAZEL_STATUS "Bazel Java VM and Javac Heap Memory Control:")
 colormessage(BAZEL_STATUS "  javac heap cache minimum \"${BAZEL_JAVACOPT_CACHE_MIN}\"")
 colormessage(BAZEL_STATUS "  javac heap cache maximum \"${BAZEL_JAVACOPT_CACHE_MAX}\"")
