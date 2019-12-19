@@ -40,6 +40,7 @@ export bazel_n_jobs="@BAZEL_N_JOBS@"
 export bazel_local_cpu_resources="@BAZEL_LOCAL_CPU_RESOURCES@"
 export bazel_javacopt="@BAZEL_JAVACOPT_CACHE_MIN@ @BAZEL_JAVACOPT_CACHE_MAX@"
 export bazel_jvmopt="@BAZEL_JVMOPT_CACHE_MIN@ @BAZEL_JVMOPT_CACHE_MAX@"
+export bazel_version="@USE_BAZEL_VERSION@"
 
 # remove warnings that clutter up the log
 export c_cxx_no_warn="--cxxopt=-Wno-unused-result --cxxopt=-Wno-ignored-attributes --cxxopt=-Wno-maybe-uninitialized --cxxopt=-Wno-sign-compare --cxxopt=-Wno-return-type --cxxopt=-Wno-deprecated-declarations --cxxopt=-fPIC --cxxopt=-std=gnu++11 --cxxopt=-Wno-ignored-attributes --copt=-Wno-comment --copt=-Wno-unused-function --copt=-Wno-maybe-uninitialized --copt=-Wno-unused-result --copt=-Wno-deprecated-declarations --copt=-march=native --copt=-Wno-sign-compare --copt=-Wno-unknown-pragmas --copt=-Wno-unused-but-set-parameter --copt=-Wno-return-type --copt=-O3 --copt=-fPIC"
@@ -87,7 +88,7 @@ fi
 
 # configure and build
 ./configure
-bazel build --config=opt \
+USE_BAZEL_VERSION=${bazel_version} bazel build --config=opt \
             --config=monolithic \
             ${bazel_n_jobs} \
             ${bazel_local_cpu_resources} \
