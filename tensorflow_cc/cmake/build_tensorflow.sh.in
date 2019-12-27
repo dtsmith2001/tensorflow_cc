@@ -7,7 +7,7 @@ function version_gt {
 }
 
 # configure environmental variables
-export CC_OPT_FLAGS=${CC_OPT_FLAGS:-"-march=ivybridge"}
+export CC_OPT_FLAGS=${CC_OPT_FLAGS:-"-march=native"}
 export TF_NEED_GCP=${TF_NEED_GCP:-0}
 export TF_NEED_HDFS=${TF_NEED_HDFS:-0}
 export TF_NEED_OPENCL=${TF_NEED_OPENCL:-0}
@@ -77,6 +77,10 @@ fi
 ./configure
 bazel build --config=opt \
             --config=monolithic \
+	--local_cpu_resources=HOST_CPUS*.75 \
+	--javacopt=-Xms256m --javacopt=-Xmx1g \
+	--jvmopt=-Xms256m --jvmopt=-Xmx1g \
+	--config=noaws --config=noignite --config=nokafka \
             $cuda_config_opts \
             tensorflow:libtensorflow_cc.so
 bazel shutdown

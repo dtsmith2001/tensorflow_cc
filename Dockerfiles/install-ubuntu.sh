@@ -17,28 +17,6 @@ for key in "$@"; do
     esac
 done
 
-# install requirements
-apt-get -y update
-apt-get -y install \
-  build-essential \
-  curl \
-  git \
-  cmake \
-  unzip \
-  autoconf \
-  autogen \
-  libtool \
-  mlocate \
-  zlib1g-dev \
-  g++-7 \
-  python \
-  python3-numpy \
-  python3-dev \
-  python3-pip \
-  python3-wheel \
-  sudo \
-  wget
-
 if $shared; then
     # install bazel for the shared library version
     export BAZEL_VERSION=${BAZEL_VERSION:-`cat ./tensorflow_cc/Dockerfiles/BAZEL_VERSION`}
@@ -61,3 +39,4 @@ updatedb
 
 # build and install tensorflow_cc
 ./tensorflow_cc/Dockerfiles/install-common.sh "$@"
+

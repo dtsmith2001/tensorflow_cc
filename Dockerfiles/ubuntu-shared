@@ -1,9 +1,76 @@
-FROM ubuntu
+FROM ubuntu:latest
+
+SHELL ["/bin/bash", "-c"]
+
+ARG cuda=false
+ARG tensorflow_tag=v2.1.0-rc1
+ARG bazel_version=0.27.1
 
 # copy the contents of this repository to the container
 COPY . tensorflow_cc
+
 # alternatively, clone the repository
 # RUN git clone https://github.com/FloopCZ/tensorflow_cc.git
 
-# build and install
-RUN ./tensorflow_cc/Dockerfiles/install-ubuntu.sh --shared
+# install requirements
+RUN apt-get -y update && \
+  apt-get -y install \
+	build-essential \
+	crossbuild-essential-armhf \
+	g++-8-arm-linux-gnueabihf \
+	gcc-8-arm-linux-gnueabihf \
+	gfortran-8-arm-linux-gnueabihf \
+	g++-6-arm-linux-gnueabihf \
+	gcc-6-arm-linux-gnueabihf \
+	gfortran-6-arm-linux-gnueabihf \
+	curl \
+	git \
+	cmake \
+	unzip \
+	autoconf \
+	autogen \
+	libtool \
+	mlocate \
+	zlib1g-dev \
+	g++-7 \
+	python \
+	python3-numpy \
+	python3-dev \
+	python3-pip \
+	python3-wheel \
+	sudo \
+	ca-certificates \
+	pkg-config \
+	zip \
+	g++ \
+	zlib1g-dev \
+	zip \
+	wget && \
+  apt-get -y autoremove
+
+RUN curl http://curl.haxx.se/ca/cacert.pem -o /etc/ssl/certs/cacert.pem
+
+RUN bazel_installer=bazel-${bazel_version}-installer-linux-x86_64.sh && \
+	wget -P /tmp https://github.com/bazelbuild/bazel/releases/download/${bazel_version}/${bazel_installer} && \
+    chmod +x /tmp/${bazel_installer}
+RUN /tmp/${bazel_installer} && \
+	rm /tmp/${bazel_installer}
+
+RUN [ "$cuda" = "true" ] && apt-get -y install cuda-command-line-tools-10-1 || echo "libcupti will not be installed"
+
+RUN apt-get -y clean && \
+	updatedb && \
+	mkdir tensorflow_cc/tensorflow_cc/build && \
+	cd tensorflow_cc/tensorflow_cc/build
+
+RUN [ "$shared" = "true" ] && \
+	cmake -DTENSORFLOW_STATIC=OFF -DTENSORFLOW_SHARED=ON -DTENSORFLOW_TAG=$tensorflow_tag .. || \
+	cmake -DTENSORFLOW_TAG=$tensorflow_tag..
+
+RUN make
+RUN rm -rf ~/.cache
+RUN make install
+
+RUN tar czf tensorflow_cc.tgz /usr/local
+
+COPY tensorflow_cc.tgz .
