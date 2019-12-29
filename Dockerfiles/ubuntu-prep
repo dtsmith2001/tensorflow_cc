@@ -1,0 +1,89 @@
+FROM ubuntu:latest
+
+ARG bazel_version=0.27.1
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get -y update
+
+# install requirements
+RUN apt-get -y install \
+	build-essential \
+	crossbuild-essential-armhf \
+	g++-8-arm-linux-gnueabihf \
+	gcc-8-arm-linux-gnueabihf \
+	gfortran-8-arm-linux-gnueabihf \
+	g++-6-arm-linux-gnueabihf \
+	gcc-6-arm-linux-gnueabihf \
+	gfortran-6-arm-linux-gnueabihf \
+	curl \
+	git \
+	cmake \
+	unzip \
+	autoconf \
+	autogen \
+	libtool \
+	mlocate \
+	zlib1g-dev \
+	g++-7 \
+	python \
+	python3-numpy \
+	python3-dev \
+	python3-pip \
+	python3-wheel \
+	sudo \
+	ca-certificates \
+	pkg-config \
+	zip \
+	g++ \
+	zlib1g-dev \
+	zip \
+	ca-certificates \
+	wget
+
+RUN apt-get -y install libpython2.7 libpython2.7-dev
+
+RUN curl http://curl.haxx.se/ca/cacert.pem -o /etc/ssl/certs/cacert.pem
+
+RUN bazel_installer=bazel-${bazel_version}-installer-linux-x86_64.sh && \
+	wget -P /tmp https://github.com/bazelbuild/bazel/releases/download/${bazel_version}/${bazel_installer} && \
+    chmod +x /tmp/${bazel_installer} && /tmp/${bazel_installer} && \
+	rm /tmp/${bazel_installer}
+
+# Axis
+RUN rm -fr /acap /axis/debug && mkdir /acap && mkdir -p /axis/debug
+ADD AXIS_Embedded_Development_SDK_2_0_3.tar.gz /acap
+ADD Axis_acap_debug_tools_150525.tar.gz /axis/debug
+
+RUN chmod a+x /acap/install-sdk-2_0_3.bin
+RUN yes | ./acap/install-sdk-2_0_3.bin
+
+#Install the compilers
+RUN dpkg -i  /axis/emb-app-sdk_2_0_3/tools/compiler/arm/comptools-arm-r21_1.21-1_amd64.deb && \
+    dpkg -i  /axis/emb-app-sdk_2_0_3/tools/compiler/armhf/comptools-armhf-r27_1.27-1+debian7~1_amd64.deb && \
+    dpkg -i  /axis/emb-app-sdk_2_0_3/tools/compiler/mips/comptools-mips-r23_1.23-3_amd64.deb
+
+#Create a folder and add the libreadline6_6 required by the gdb
+ADD libreadline6_6.3-8ubuntu2_amd64.deb /axis/debug/
+
+#Install the libreadline6_6
+RUN dpkg -i /axis/debug/libreadline6_6.3-8ubuntu2_amd64.deb
+
+#Add and extract the debug tools to the debug folder
+ADD Axis_acap_debug_tools_150525.tar.gz /axis/debug
+
+#Install the debug tools (gdb)
+RUN dpkg -i  /axis/debug/Axis_acap_debug_tools/host/gdb-arm_7.5-1_amd64_wheezy.deb && \
+    dpkg -i  /axis/debug/Axis_acap_debug_tools/host/gdb-cris_7.5-1_amd64_wheezy.deb && \
+    dpkg -i  /axis/debug/Axis_acap_debug_tools/host/gdb-mips_7.5-1_amd64_wheezy.deb
+
+#Make the gdbserver excutable and ready to be upload to the Axis device
+RUN chmod a+x /axis/debug/Axis_acap_debug_tools/target/gdbserver_arm && \
+    chmod a+x /axis/debug/Axis_acap_debug_tools/target/gdbserver_crisv32 && \
+    chmod a+x /axis/debug/Axis_acap_debug_tools/target/gdbserver_mips32
+
+#Delete the acap folder
+RUN rm -rf /acap
+
+RUN apt-get -y autoremove && apt-get -y clean && \
+	updatedb
