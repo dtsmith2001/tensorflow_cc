@@ -32,6 +32,17 @@ RUN [ "$shared" = "true" ] && \
 
 RUN make
 
-#RUN tar czf tensorflow_cc.tgz /usr/local
+WORKDIR /tensorflow_cc/tensorflow_cc/build/tensorflow
+
+RUN tensorflow/lite/tools/make/download_dependencies.sh
+
+RUN tensorflow/lite/tools/make/build_rpi_lib.sh
+
+RUN make -f tensorflow/lite/tools/make/Makefile TARGET=rpi TARGET_ARCH=armv7l
+RUN make -f tensorflow/lite/tools/make/Makefile TARGET=arm_axis TARGET_ARCH=armv7l
+
+RUN ls -l tensorflow/tensorflow/lite/tools/make/gen/*_armv7l/lib/libtensorflow-lite.a
+
+# RUN tar czf tensorflow_cc.tgz 
 
 #COPY tensorflow_cc.tgz .
