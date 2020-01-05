@@ -1,8 +1,6 @@
 # docker build -t vallumdev/development:tensorflow_cc_prep -f Dockerfiles/ubuntu-shared .
 # docker build -t vallumdev/development:tensorflow_cc -f Dockerfiles/ubuntu-shared .
 
-NOTE This dockerfile is not complete. the tensorflow lite builds are not documented yet
-
 FROM vallumdev/development:tensorflow_cc_prep
 
 ARG DEBIAN_FRONTEND=noninteractive
